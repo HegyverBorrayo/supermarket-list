@@ -1,0 +1,11 @@
+
+npm init
+mkdir app
+mkdir app/endpoints
+mkdir config
+touch config/mysql.js
+touch config/server.js
+mkdir sql
+touch index.js
+npm install express
+npm install mysql
