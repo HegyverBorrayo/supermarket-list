@@ -15,7 +15,7 @@ const login = (req, res) => {
         if (err) {
             res.status(500).json({status: 0, message: "Credenciales no validas"} );
         }else {
-            jwt.sign({user}, 'secretkey', {expiresIn: '32s'} ,(error_token, token) => {
+            jwt.sign({user}, 'secretkey', {expiresIn: '1d'} ,(error_token, token) => {
                 res.json({token})
             })
         }
