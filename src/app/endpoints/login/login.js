@@ -11,13 +11,17 @@ const login = (req, res) => {
 
     let query = `SELECT user from Users WHERE email = '${req.body.email}' AND password = MD5('${req.body.password}')`;
 
-    conn.query(query, (err, user, fields) => {
+    conn.query(query, (err, userlogin, fields) => {
         if (err) {
             res.status(500).json({status: 0, message: "Credenciales no validas"} );
         }else {
-            jwt.sign({user}, 'secretkey', {expiresIn: '1d'} ,(error_token, token) => {
-                res.json({token})
-            })
+            if (userlogin.length > 0) {
+                jwt.sign({user}, 'secretkey', {expiresIn: '1d'} ,(error_token, token) => {
+                    res.json({token})
+                })
+            } else {
+                res.status(403).json({status: 403, message: "Usuario y password incorrecto"})
+            }
         }
     })
 }
