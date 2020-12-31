@@ -27,6 +27,16 @@ app.post('/api/user/forgot-password/', auth, forgotPassword.forgot_password)
 const updatePassword = require("./app/endpoints/password/update-password");
 app.post('/api/user/update-password/:user', auth, updatePassword.update_password);
 
+const user = require("./app/endpoints/user/user");
+app.post('/api/user/update/:user', auth, user.update_user);
+
+const brand = require("./app/endpoints/brand/brand");
+app.get('/api/brand', auth, brand.get_brands);
+app.get('/api/brand/:brand', auth, brand.get_brand);
+app.post('/api/brand', auth, brand.new_brand);
+app.put('/api/brand/:brand', auth, brand.update_brand);
+app.post('/api/brand/:brand/change-status', auth, brand.change_status);
+
 server.listen(server.get("port"), () => {
     console.log(`${server.get("port")}`)
 });
