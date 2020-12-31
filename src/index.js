@@ -37,6 +37,13 @@ app.post('/api/brand', auth, brand.new_brand);
 app.put('/api/brand/:brand', auth, brand.update_brand);
 app.post('/api/brand/:brand/change-status', auth, brand.change_status);
 
+const category = require("./app/endpoints/category/category");
+app.get('/api/category', auth, category.get_categories);
+app.get('/api/category/:category', auth, category.get_category);
+app.post('/api/category', auth, category.new_category);
+app.put('/api/category/:category', auth, category.update_category);
+app.post('/api/category/:category/change-status', auth, category.change_status);
+
 server.listen(server.get("port"), () => {
     console.log(`${server.get("port")}`)
 });
