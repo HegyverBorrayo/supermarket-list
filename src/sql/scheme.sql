@@ -36,7 +36,7 @@ CREATE TABLE Category (
     category INT AUTO_INCREMENT,
     name varchar(255) NOT NULL,
     description text NULL,
-    PRIMARY key (category)
+    PRIMARY KEY (category)
 );
 
 CREATE TABLE Product (
@@ -47,31 +47,46 @@ CREATE TABLE Product (
     suggested_brand INT NULL,
     similar_brand INT NULL,
     category INT NULL,
+    owner INT NOT NULL,
     PRIMARY KEY (product),
     FOREIGN KEY (brand) REFERENCES Brand(brand),
     FOREIGN KEY (suggested_brand) REFERENCES Brand(brand),
     FOREIGN KEY (similar_brand) REFERENCES Brand(brand),
-    FOREIGN KEY (category) REFERENCES Category(category)
+    FOREIGN KEY (category) REFERENCES Category(category),
+    FOREIGN KEY (owner) REFERENCES Users(user)
 );
 
-CREATE TABLE Next_Purchase (
-    next_purchase INT AUTO_INCREMENT,
-    status char(20) NOT NULL DEFAULT 'PENDING',
-    date_purchase TIMESTAMP NULL,
-    user INT NOT NULL,
-    product INT NOT NULL,
-    PRIMARY KEY (next_purchase),
-    FOREIGN KEY (user) REFERENCES Users(user),
-    FOREIGN KEY (product) REFERENCES Product(product)
-);
-
-CREATE TABLE Purchases (
+/* Tabla para las compras (futuras y no futuras)*/
+CREATE TABLE Purchase (
     purchase INT AUTO_INCREMENT,
-    product INT NOT NULL,
-    user INT NOT NULL,
-    date_purchase TIMESTAMP,
+    name varchar(255) NULL,
+    description text NULL,
+    status char(20) NULL DEFAULT 'PENDING',
+    date_purchase TIMESTAMP NULL,
+    owner INT NOT NULL,
+    next_purchase Boolean DEFAULT TRUE,
     PRIMARY KEY (purchase),
-    FOREIGN KEY (user) REFERENCES Users(user),
+    FOREIGN KEY (owner) REFERENCES Users(user)
+);
+
+/* Tabla para compartir las listas */
+CREATE TABLE Shared_Purchase(
+    snp INT AUTO_INCREMENT,
+    purchase INT NOT NULL,
+    user_shared INT NOT NULL,
+    PRIMARY KEY (snp),
+    FOREIGN KEY (purchase) REFERENCES Purchase(purchase),
+    FOREIGN KEY (user_shared) REFERENCES Users(user)
+);
+
+/* Relacion entre lista siguiente compra y producto */
+CREATE TABLE Product_Purchase (
+    pnp INT AUTO_INCREMENT,
+    purchase INT NOT NULL,
+    product INT NOT NULL,
+    UNIQUE(purchase, product),
+    PRIMARY KEY (pnp),
+    FOREIGN KEY (purchase) REFERENCES Purchase(purchase),
     FOREIGN KEY (product) REFERENCES Product(product)
 );
 
@@ -87,7 +102,8 @@ ALTER TABLE `Brand` MODIFY status varchar(100) DEFAULT 'INACTIVE';
 ALTER TABLE `Category` ADD COLUMN status varchar(100) DEFAULT 'ACTIVE';
 ALTER TABLE `Category` MODIFY status varchar(100) DEFAULT 'INACTIVE';
 
+ALTER TABLE `Purchases` ADD COLUMN creation_date DATETIME DEFAULT NOW();
 
-ALTER TABLE `Next_Purchase` ADD COLUMN creation_date DATETIME DEFAULT NOW();
-ALTER TABLE `Next_Purchase` ADD COLUMN name varchar(255) NOT NULL;
-ALTER TABLE `Next_Purchase` ADD COLUMN description text NULL;
+ALTER TABLE `Product` DROP COLUMN quantity;
+
+ALTER TABLE `Product_Purchase` ADD COLUMN quantity INT DEFAULT 1;
