@@ -1,11 +1,12 @@
 const mysql = require("mysql");
+const dotenv = require("dotenv").config();
 
 const conn = mysql.createConnection({
-    host: "z5zm8hebixwywy9d.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
-    user: 's1995pfkk7a5csmj',
-    password: "ucycm9zsz56cyzd1",
-    database: 'hvu07lntfsc1b12j'
-})
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE
+});
 
 conn.connect(err => {
     if(err) console.log("problema en conexion a mysql");
